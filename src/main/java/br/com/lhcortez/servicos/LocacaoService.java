@@ -6,6 +6,8 @@ import br.com.lhcortez.entidades.Filme;
 import br.com.lhcortez.entidades.Locacao;
 import br.com.lhcortez.entidades.Usuario;
 import br.com.lhcortez.utils.DataUtils;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class LocacaoService {
 
@@ -27,7 +29,8 @@ public class LocacaoService {
         return locacao;
     }
 
-    public static void main(String[] args) {
+    @Test
+    public void teste() {
         //cenario
         LocacaoService service = new LocacaoService();
         Usuario usuario = new Usuario("Luiz Cortez");
@@ -37,9 +40,9 @@ public class LocacaoService {
         Locacao locacao = service.alugarFilme(usuario, filme);
 
         //verificacao
-        System.out.println(locacao.getValor() == 4.0);
-        System.out.println(DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()));
-        System.out.println(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(2)));
+        Assert.assertTrue(locacao.getValor() == 5.0);
+        Assert.assertTrue(DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()));
+        Assert.assertTrue(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)));
 
     }
 }
