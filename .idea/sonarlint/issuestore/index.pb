@@ -10,3 +10,7 @@ i
 9.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_3.xml,b\8\b8d96649614bd84192f3496ef7d33bab1d1e5ec1
 C
 TestesUnitarios.iml,6\7\676504534a91377b1ffc19c7a7095546bf80a7cf
+7
+pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
+w
+Gsrc/main/java/br/com/lhcortez/exceptions/FilmesSemEstoqueException.java,c\1\c1705acef44a1dfaede4f260d4db320493f01333

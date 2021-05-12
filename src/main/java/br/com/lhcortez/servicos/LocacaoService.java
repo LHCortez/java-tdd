@@ -1,6 +1,8 @@
 package br.com.lhcortez.servicos;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import br.com.lhcortez.entidades.Filme;
 import br.com.lhcortez.entidades.Locacao;
@@ -9,31 +11,61 @@ import br.com.lhcortez.exceptions.FilmesSemEstoqueException;
 import br.com.lhcortez.exceptions.LocadoraException;
 import br.com.lhcortez.utils.DataUtils;
 
+import static br.com.lhcortez.utils.DataUtils.adicionarDias;
+
 public class LocacaoService {
 
-    public Locacao alugarFilme(Usuario usuario, Filme filme) throws FilmesSemEstoqueException, LocadoraException {
+    public Locacao alugarFilme(Usuario usuario, List<Filme> filmes) throws FilmesSemEstoqueException, LocadoraException {
 
         if (usuario == null) {
             throw new LocadoraException("Usuario vazio");
         }
 
-        if (filme == null) {
+        if (filmes == null || filmes.isEmpty()) {
             throw new LocadoraException("Filme vazio");
         }
 
-        if (filme.getEstoque() == 0) {
-            throw new FilmesSemEstoqueException();
-        }
+        for (Filme filme : filmes)
+            if (filme.getEstoque() == 0) {
+                throw new FilmesSemEstoqueException();
+            }
 
         Locacao locacao = new Locacao();
-        locacao.setFilme(filme);
+        locacao.setFilmes(filmes);
         locacao.setUsuario(usuario);
         locacao.setDataLocacao(new Date());
-        locacao.setValor(filme.getPrecoLocacao());
+        Double valorTotal = 0d;
+
+        for (int i = 0; i < filmes.size(); i++) {
+            Filme filme = filmes.get(i);
+            Double valorFilme = filme.getPrecoLocacao();
+
+            switch (i) {
+                case 2:
+                    valorFilme = valorFilme * 0.75;
+                    break;
+                case 3:
+                    valorFilme = valorFilme * 0.50;
+                    break;
+                case 4:
+                    valorFilme = valorFilme * 0.25;
+                    break;
+                case 5:
+                    valorFilme = 0d;
+                    break;
+            }
+
+            valorTotal += valorFilme;
+        }
+
+        locacao.setValor(valorTotal);
 
         //Entrega no dia seguinte
         Date dataEntrega = new Date();
-        dataEntrega = DataUtils.adicionarDias(dataEntrega, 1);
+        dataEntrega = adicionarDias(dataEntrega, 1);
+        if(DataUtils.verificarDiaSemana(dataEntrega, Calendar.SUNDAY)){
+            dataEntrega = adicionarDias(dataEntrega,1);
+        }
         locacao.setDataRetorno(dataEntrega);
 
         //Salvando a locacao...
